@@ -75,7 +75,7 @@ ApiConnector.getFavorites((response) => {
   if (response.success) {
     favoritesWidget.clearTable();
     favoritesWidget.fillTable(response.data);
-    favoritesWidget.updateUsersList(response.data);    
+    moneyManager.updateUsersList(response.data);    
   };
 }); 
 
