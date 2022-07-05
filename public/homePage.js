@@ -2,8 +2,8 @@
 
 const logoutButton = new LogoutButton();
 
-logoutButton.action = (data) => 
-  ApiConnector.logout(data, (response) => {
+logoutButton.action = () => 
+  ApiConnector.logout ((response) => {
     if (response.success) {
       location.reload();
     };
@@ -13,7 +13,7 @@ logoutButton.action = (data) =>
 
 ApiConnector.current((response) => {
   if (response.success) {
-    return ProfileWidget.showProfile(response.data);
+    ProfileWidget.showProfile(response.data);
   };
 }); 
 
@@ -33,73 +33,75 @@ setInterval(ratesBoard.getCourses, 60000);
 const moneyManager = new MoneyManager();
 
 moneyManager.addMoneyCallback = (data) => 
-  ApiConnector.addMoney((data, response) => {
+  ApiConnector.addMoney(data, (response) => {
     if (response.success) {  
-      moneyManager.setMessage(response.success, 'Деньги внесены на счет');
-      return ProfileWidget.showProfile(response.data);
+      moneyManager.setMessage(response.success, 'Баланс пополнен');
+      ProfileWidget.showProfile(response.data);
     } else {
-      moneyManager.setMessage(response.success, 'Деньги не внесены на счет');
+      moneyManager.setMessage(response.success, response.error);
     };
   });
 
 
-/*
+
 moneyManager.conversionMoneyCallback = (data) => {
-  ApiConnector.convertMoney((data, response) => {
+  ApiConnector.convertMoney(data, (response) => {
     if (response.success) {  
       moneyManager.setMessage(response.success, 'Конвертация прошла успешно');
-      return ProfileWidget.showProfile(response.data);
+      ProfileWidget.showProfile(response.data);
     } else {
-      moneyManager.setMessage(response.success, 'Ошибка конвертации');
+      moneyManager.setMessage(response.success, response.error);
     };
   });
-}
+};
 
 
 moneyManager.sendMoneyCallback = (data) => {
-  ApiConnector.transferMoney((data, response) => {
+  ApiConnector.transferMoney(data, (response) => {
     if (response.success) {  
       moneyManager.setMessage(response.success, 'Трансфер прошел успешно');
-      return ProfileWidget.showProfile(response.data);
+      ProfileWidget.showProfile(response.data);
     } else {
-      moneyManager.setMessage(response.success, 'Ошибка трансфера');
-    };
+      moneyManager.setMessage(response.success, response.error);
+    };   
   });
-}
+};
 
 
-  
+
 const favoritesWidget = new FavoritesWidget();
 
 ApiConnector.getFavorites((response) => {
   if (response.success) {
     favoritesWidget.clearTable();
-    favoritesWidget.fillTable(response);
-    favoritesWidget.updateUsersList();    
+    favoritesWidget.fillTable(response.data);
+    favoritesWidget.updateUsersList(response.data);    
   };
 }); 
 
 favoritesWidget.addUserCallback = (data) => {
-  ApiConnector.addUserToFavorites((data, response) => {
+  ApiConnector.addUserToFavorites(data, (response) => {
     if (response.success) {  
+      favoritesWidget.clearTable();
+      favoritesWidget.fillTable(response.data);
       favoritesWidget.setMessage(response.success, 'Пользователь добавлен в список избранных');
-      return ProfileWidget.showProfile(response.data);
     } else {
-      favoritesWidget.setMessage(response.success, 'Пользователь не был добавлен в список избранных');
-    };
+      favoritesWidget.setMessage(response.success, response.error);
+    };  
   });
-}    
+};    
   
 favoritesWidget.removeUserCallback = (data) => {
-  ApiConnector.removeUserFromFavorites((data, response) => {
+  ApiConnector.removeUserFromFavorites(data, (response) => {
     if (response.success) {  
-      favoritesWidget.setMessage(response.success, 'Пользователь добавлен в список избранных');
-      return ProfileWidget.showProfile(response.data);
+      favoritesWidget.clearTable();
+      favoritesWidget.fillTable(response.data);
+      favoritesWidget.setMessage(response.success, 'Пользователь удален из списка избранных');
     } else {
-      favoritesWidget.setMessage(response.success, 'Пользователь не был добавлен в список избранных');
-    };
+      favoritesWidget.setMessage(response.success, response.error);
+    }; 
   });
-}    
- */     
+};   
+     
 
   
